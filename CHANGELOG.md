@@ -9,6 +9,7 @@ All notes should be prepended with the location of the change, e.g. `(proto)` or
 
 ### Changed
 
+- (all) upgraded to Tokio 0.3
 - (proto) Set TCP_NODELAY when building a TCP connection (@djc) #1249
 - (all) *BREAKING* The `UdpSocket` trait has grown an associated `Time` type.
 - (all) *BREAKING* The `Connect` trait has lost its
@@ -18,7 +19,7 @@ bound for implementing the `Connect` trait.
 - (resolver) *BREAKING* Move `CachingClient` from `lookup_state` to `caching_client` module
 - (resolver) *BREAKING* Move `ResolverOpts::distrust_nx_responses` to `NameServerConfig::trust_nx_responses` (@djc) #1212
 - (proto) `data-encoding` is now a required dependency #1208
-- (all) minimum rustc version now `1.42`
+- (all) minimum rustc version now `1.45`
 - (resolver) For all NxDomain and NoError/NoData responses, `ResolveErrorKind::NoRecordsFound` will be returned #1197
 - (server) Support for lowercase DNSClass and RecordType fields in zonefiles (@zhanif3) #1186
 - (resolver) Make EDNS optional for resolvers (@CtrlZvi) #1173
