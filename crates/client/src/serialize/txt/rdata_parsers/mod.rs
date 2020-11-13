@@ -32,3 +32,4 @@ pub mod srv;
 pub mod sshfp;
 pub mod tlsa;
 pub mod txt;
+pub mod did;

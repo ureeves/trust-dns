@@ -58,6 +58,7 @@ impl RDataParser for RData {
             RecordType::SSHFP => RData::SSHFP(sshfp::parse(tokens)?),
             RecordType::TLSA => RData::TLSA(tlsa::parse(tokens)?),
             RecordType::TXT => RData::TXT(txt::parse(tokens)?),
+            RecordType::DID => RData::DID(did::parse(tokens)?),
             RecordType::DNSSEC(DNSSECRecordType::SIG) => panic!("parsing SIG doesn't make sense"), // valid panic, never should happen
             RecordType::DNSSEC(DNSSECRecordType::DNSKEY) => {
                 panic!("DNSKEY should be dynamically generated")

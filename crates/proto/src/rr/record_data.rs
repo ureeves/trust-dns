@@ -26,7 +26,7 @@ use log::{debug, warn};
 
 use super::domain::Name;
 use super::rdata;
-use super::rdata::{CAA, MX, NAPTR, NULL, OPENPGPKEY, OPT, SOA, SRV, SSHFP, TLSA, TXT};
+use super::rdata::{CAA, MX, NAPTR, NULL, OPENPGPKEY, OPT, SOA, SRV, SSHFP, TLSA, TXT, DIDDocument};
 use super::record_type::RecordType;
 use crate::error::*;
 use crate::serialize::binary::*;
@@ -578,6 +578,17 @@ pub enum RData {
     /// ```
     TXT(TXT),
 
+    /// [DID Documents](https://www.w3.org/TR/did-core/#dfn-did-documents) are
+    /// a set of data describing the [DID subject](https://www.w3.org/TR/did-core/#dfn-did-subjects),
+    /// including mechanisms, such as public keys and pseudonymous biometrics,
+    /// that the DID subject or a DID delegate can use to authenticate itself
+    /// and prove its association with the DID. A DID document may also contain
+    /// other attributes or claims describing the DID subject. A DID document
+    /// may have one or more different representations as defined in § 6. Core
+    /// Representations or in the W3C DID Specification Registries
+    /// [DID-SPEC-REGISTRIES](https://www.w3.org/TR/did-core/#bib-did-spec-registries).
+    DID(DIDDocument),
+
     /// A DNSSEC- or SIG(0)- specific record. See `DNSSECRData` for details.
     ///
     /// These types are in `DNSSECRData` to make them easy to disable when
@@ -692,6 +703,10 @@ impl RData {
             RecordType::TXT => {
                 debug!("reading TXT");
                 rdata::txt::read(decoder, rdata_length).map(RData::TXT)
+            }
+            RecordType::DID => {
+                debug!("reading DID");
+                rdata::did::read(decoder, rdata_length).map(RData::DID)
             }
             #[cfg(feature = "dnssec")]
             RecordType::DNSSEC(record_type) => {
@@ -823,6 +838,7 @@ impl RData {
                 encoder.with_canonical_names(|encoder| rdata::tlsa::emit(encoder, tlsa))
             }
             RData::TXT(ref txt) => rdata::txt::emit(encoder, txt),
+            RData::DID(ref doc) => rdata::did::emit(encoder, doc),
             #[cfg(feature = "dnssec")]
             RData::DNSSEC(ref rdata) => encoder.with_canonical_names(|encoder| rdata.emit(encoder)),
             RData::Unknown { ref rdata, .. } => rdata::null::emit(encoder, rdata),
@@ -849,6 +865,7 @@ impl RData {
             RData::SSHFP(..) => RecordType::SSHFP,
             RData::TLSA(..) => RecordType::TLSA,
             RData::TXT(..) => RecordType::TXT,
+            RData::DID(..) => RecordType::DID,
             #[cfg(feature = "dnssec")]
             RData::DNSSEC(ref rdata) => RecordType::DNSSEC(DNSSECRData::to_record_type(rdata)),
             RData::Unknown { code, .. } => RecordType::Unknown(code),
@@ -1096,6 +1113,7 @@ mod tests {
             RData::SSHFP(..) => RecordType::SSHFP,
             RData::TLSA(..) => RecordType::TLSA,
             RData::TXT(..) => RecordType::TXT,
+            RData::DID(..) => RecordType::DID,
             #[cfg(feature = "dnssec")]
             RData::DNSSEC(ref rdata) => RecordType::DNSSEC(rdata.to_record_type()),
             RData::Unknown { code, .. } => RecordType::Unknown(code),

@@ -91,6 +91,9 @@ pub enum RecordType {
     //  TSIG,       // 250 RFC 2845 Transaction Signature
     /// RFC 1035[1] Text record
     TXT,
+    // DNS DID record
+    /// DID Record
+    DID,
 
     /// A DNSSEC- or SIG(0)- specific record type.
     ///
@@ -166,6 +169,7 @@ impl FromStr for RecordType {
             "SSHFP" => Ok(RecordType::SSHFP),
             "TLSA" => Ok(RecordType::TLSA),
             "TXT" => Ok(RecordType::TXT),
+            "DID" => Ok(RecordType::DID),
             "ANY" | "*" => Ok(RecordType::ANY),
             "AXFR" => Ok(RecordType::AXFR),
             #[cfg(feature = "dnssec")]
@@ -209,6 +213,7 @@ impl From<u16> for RecordType {
             44 => RecordType::SSHFP,
             52 => RecordType::TLSA,
             16 => RecordType::TXT,
+            42 => RecordType::DID,
             #[cfg(feature = "dnssec")]
             48/*DNSKEY*/ |
             43/*DS*/ |
@@ -279,6 +284,7 @@ impl From<RecordType> for &'static str {
             RecordType::SSHFP => "SSHFP",
             RecordType::TLSA => "TLSA",
             RecordType::TXT => "TXT",
+            RecordType::DID => "DID",
             #[cfg(feature = "dnssec")]
             RecordType::DNSSEC(rt) => rt.into(),
             RecordType::Unknown(_) => "Unknown",
@@ -320,6 +326,7 @@ impl From<RecordType> for u16 {
             RecordType::SSHFP => 44,
             RecordType::TLSA => 52,
             RecordType::TXT => 16,
+            RecordType::DID => 42,
             #[cfg(feature = "dnssec")]
             RecordType::DNSSEC(rt) => rt.into(),
             RecordType::Unknown(code) => code,
@@ -415,6 +422,7 @@ mod tests {
             "SSHFP",
             "TLSA",
             "TXT",
+            "DID",
             "ANY",
             "AXFR",
         ];

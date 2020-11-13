@@ -33,6 +33,7 @@ pub mod srv;
 pub mod sshfp;
 pub mod tlsa;
 pub mod txt;
+pub mod did;
 
 pub use self::caa::CAA;
 pub use self::mx::MX;
@@ -45,3 +46,4 @@ pub use self::srv::SRV;
 pub use self::sshfp::SSHFP;
 pub use self::tlsa::TLSA;
 pub use self::txt::TXT;
+pub use self::did::DIDDocument;
